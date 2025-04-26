@@ -21,10 +21,14 @@
 #include <podio/CollectionBase.h>
 #include <podio/Frame.h>
 #include <podio/ROOTWriter.h>
+// dd4hep libraries
+#include <DD4hep/Detector.h>
+#include <DD4hep/IDDescriptor.h>
 // root libraries
 #include <TDatime.h>
 #include <TRandom3.h>
 // c++ utilities
+#include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -62,6 +66,8 @@ void GenerateRandomHits(const Options& opt = DefaultOptions) {
   // announce start
   std::cout << "\n Beginning stage 1 test: generating random raw hits..." << std::endl;
 
+  // initialize interfaces ----------------------------------------------------
+
   // open output file
   podio::ROOTWriter writer( opt.out_file );
   std::cout << "    Opened ROOT writer.\n"
@@ -84,16 +90,46 @@ void GenerateRandomHits(const Options& opt = DefaultOptions) {
       break;
   }
   std::cout << "    Initialized RNG.\n"
-            << "      seed = " << opt.seed << "\n"
-            << "    Starting frame loop: " << opt.nframes << " to generate."
+            << "      seed = " << opt.seed
             << std::endl;
 
-  /* TODO interface with geometry
-   *   to get reasonable BHCal
-   *   cell IDs
-   */
+  // initialize detector interface
+  auto detector = dd4hep::Detector::make_unique("");
 
-  // begin frame loop
+  // set geometry to compact specified by environment
+  try {
+    auto* dconfig = std::getenv("DETECTOR_CONFIG");
+    auto* dpath   = std::getenv("DETECTOR_PATH");
+    if (dconfig && dpath) {
+      detector -> fromCompact(
+        std::string(dpath) + "/" + std::string(dconfig) + ".xml"
+      );
+    } else {
+      std::cerr << "PANIC: check that DETECTOR_CONFIG and DETECTOR_PATH are set!\n" << std::endl;
+      exit(-1);
+    }
+  } catch(std::runtime_error& err) {
+    std::cerr << "PANIC: error initializing detector!\n" << std::endl;
+    exit(-1);
+  }
+  std::cout << "    Initialized detector." << std::endl;
+
+  // make sure BHCal readout is available
+  dd4hep::IDDescriptor descriptor;
+  try {
+    descriptor = detector -> readout("HcalBarrelHits").idSpec();
+  } catch (const std::runtime_error &err) {
+    std::cerr << "PANIC: readout class is not in output!\n" << std::endl;;
+    exit(-1);
+  }
+  std::cout << "    Initialized ID descriptor." << std::endl;
+
+  // generate random hits -----------------------------------------------------
+
+  // announce loop start
+  std::cout << "    Starting frame loop: " << opt.nframes << " to generate." << std::endl;
+
+  // hit loop
   for (uint64_t iframe = 0; iframe < opt.nframes; ++iframe) {
 
     // print progess if need be
@@ -113,10 +149,24 @@ void GenerateRandomHits(const Options& opt = DefaultOptions) {
     // now generate nhits random hits per frame
     for (std::size_t ihit = 0; ihit < opt.nhits; ++ihit) {
 
+      // get random values
+      int32_t  ieta = rando -> Uniform(0, 24);
+      int32_t  iphi = rando -> Uniform(0, 320);
+      uint32_t amp  = rando -> Poisson(opt.mean);
+
+      // encode hit position into a cell id
+      int32_t cell = descriptor.encode(
+        {
+          {"system", 111},
+          {"eta", ieta},
+          {"phi", iphi}
+        }
+      );
+
       // create hit (ignore time stamp)
       auto hit = hits -> create();
-      hit.setCellID(ihit);  // FIXME set to something reaonsable
-      hit.setAmplitude(rando -> Poisson(opt.mean));
+      hit.setCellID(cell);
+      hit.setAmplitude(amp);
 
     }  // end hit loop
 
@@ -128,6 +178,8 @@ void GenerateRandomHits(const Options& opt = DefaultOptions) {
 
   }  // end frame loop
   std::cout << "    Finished frame loop!" << std::endl;
+
+  // close interfaces ---------------------------------------------------------
 
   // close writer & announce end
   writer.finish();
