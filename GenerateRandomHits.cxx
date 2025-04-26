@@ -26,6 +26,7 @@
 #include <TRandom3.h>
 // c++ utilities
 #include <iostream>
+#include <memory>
 #include <string>
 
 
@@ -37,13 +38,18 @@ struct Options {
   std::string out_file;     //!< output file name
   std::string out_collect;  //!< output collection (branch) name
   uint64_t    nframes;      //!< number of frames to generate
+  uint32_t    nhits;        //!< number of hits per frame to generate
   uint16_t    seed;         //!< seed mode (0 = fixed seed, 1 = date/time)
+  float       mean;         //!< mean hit "amplitude" in [ADC]
   bool        progress;     //!< turn on/off frame loop progress
 } DefaultOptions = {
   "test_stage1.root",
   "HcalBarrelRandomRawHits",
   100,
-  0
+  10,
+  0,
+  40.,
+  true
 };
 
 
@@ -82,6 +88,11 @@ void GenerateRandomHits(const Options& opt = DefaultOptions) {
             << "    Starting frame loop: " << opt.nframes << " to generate."
             << std::endl;
 
+  /* TODO interface with geometry
+   *   to get reasonable BHCal
+   *   cell IDs
+   */
+
   // begin frame loop
   for (uint64_t iframe = 0; iframe < opt.nframes; ++iframe) {
 
@@ -95,22 +106,36 @@ void GenerateRandomHits(const Options& opt = DefaultOptions) {
       }
     }
 
-    /* TODO
-     *   - create(?) hit collection
-     *   - populate it with some randomly generated hits
-     *   - write frame
-     */ 
+    // create frame & hit collection
+    auto frame = podio::Frame();
+    auto hits  = std::make_unique<edm4hep::RawCalorimeterHitCollection>();
 
+    // now generate nhits random hits per frame
+    for (std::size_t ihit = 0; ihit < opt.nhits; ++ihit) {
+
+      // create hit (ignore time stamp)
+      auto hit = hits -> create();
+      hit.setCellID(ihit);  // FIXME set to something reaonsable
+      hit.setAmplitude(rando -> Poisson(opt.mean));
+
+    }  // end hit loop
+
+    // place hits in frame and write out
+    //   - n.b. frame category is "events" for compatibility
+    //     with EICrecon until we go to frames-in-events-out
+    frame.put(std::move(hits), opt.out_collect);
+    writer.writeFrame(frame, "events");
 
   }  // end frame loop
-  std::cout << "    Finished frame loop!
+  std::cout << "    Finished frame loop!" << std::endl;
 
-  // close writer
-  writer -> finish();
-  std::cout << "    Completed writing." << std::endl;
+  // close writer & announce end
+  writer.finish();
+  std::cout << "    Completed writing.\n"
+            << "  Finished stage 1 test!\n"
+            << std::endl;
 
-  // announce end and exit
-  std::cout << "  Finished stage 1 test!" << std::endl;
+  // exit
   return;
 
 }
