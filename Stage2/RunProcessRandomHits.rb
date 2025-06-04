@@ -27,6 +27,8 @@ end.parse!
 
 # output collections from EICrecon
 collections = [
+  "EventHeader",
+  "HcalBarrelRandomRawHits",
   "HcalBarrelRandomRecHits",
   "HcalBarrelRandomMergedHits",
   "HcalBarrelRandomHitClusters"
