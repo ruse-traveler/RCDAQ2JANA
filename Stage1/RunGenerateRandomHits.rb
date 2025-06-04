@@ -16,7 +16,6 @@ pars = OpenStruct.new
 # set parameters (can also be set from
 # command line)
 pars.file     = "test_stage1_set.root"
-pars.collect  = "HcalBarrelRandomRawHits"
 pars.nframes  = 100
 pars.seed     = 0
 pars.progress = true
@@ -24,7 +23,6 @@ pars.progress = true
 # now parse any provided command line options 
 OptionParser.new do |opt|
   opt.on('-f FILE') { |val| pars.file     = val }
-  opt.on('-c COLL') { |val| pars.collect  = val }
   opt.on('-r FRAM') { |val| pars.nframes  = val }
   opt.on('-s SEED') { |val| pars.seed     = val }
   opt.on('-p PROG') { |val| pars.progress = val } 
@@ -34,11 +32,10 @@ end.parse!
 # bundle options and form command
 bundle = <<STR
   {\
-    .out_file    = "#{pars.file}",\
-    .out_collect = "#{pars.collect}",\
-    .nframes     = #{pars.nframes},\
-    .seed        = #{pars.seed},\
-    .progress    = #{pars.progress}\
+    .out_file = "#{pars.file}",\
+    .nframes  = #{pars.nframes},\
+    .seed     = #{pars.seed},\
+    .progress = #{pars.progress}\
   }
 STR
 command = "root -b -q \'GenerateRandomHits.cxx(#{bundle.gsub(/\s+/, "")})\'"
@@ -47,4 +44,3 @@ command = "root -b -q \'GenerateRandomHits.cxx(#{bundle.gsub(/\s+/, "")})\'"
 exec(command);
 
 # end =========================================================================
-

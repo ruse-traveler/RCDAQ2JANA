@@ -45,13 +45,11 @@ namespace Stage1 {
   // ----------------------------------------------------------------------------
   struct Options {
     std::string out_file;     //!< output file name
-    std::string out_collect;  //!< output collection (branch) name
     uint64_t    nframes;      //!< number of frames to generate
     uint16_t    seed;         //!< seed mode (0 = fixed seed, 1 = date/time)
     bool        progress;     //!< turn on/off frame loop progress
   } DefaultOptions = {
     "test_stage1.root",
-    "HcalBarrelRandomRawHits",
     100,
     0,
     true
@@ -61,9 +59,11 @@ namespace Stage1 {
   //! Struct to consolidate routine constants
   // --------------------------------------------------------------------------
   struct Constants {
-    uint32_t nhits;  //!< number of hits per frame to generate
-    float    mean;   //!< mean hit "amplitude" in [ADC]
+    std::string out_collect;  //!< output collection (branch) name
+    uint32_t    nhits;        //!< number of hits per frame to generate
+    float       mean;         //!< mean hit "amplitude" in [ADC]
   } DefaultConsts = {
+    "HcalBarrelRandomRawHits",
     10,
     40.
   };
@@ -190,7 +190,7 @@ void GenerateRandomHits(
     // place hits in frame and write out
     //   - n.b. frame category is "events" for compatibility
     //     with EICrecon until we go to frames-in-events-out
-    frame.put(std::move(hits), opt.out_collect);
+    frame.put(std::move(hits), con.out_collect);
     writer.writeFrame(frame, "events");
 
   }  // end frame loop
