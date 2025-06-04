@@ -6,6 +6,9 @@
  *  A small EICrecon plugin to "reconstruct" and
  *  cluster random hits generated in development
  *  stage 1.
+ *
+ *  This is the 2nd stage of development
+ *  towards an RCDAQ2JANA prototype.
  */
 /// ===========================================================================
 

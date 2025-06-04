@@ -6,6 +6,9 @@
  *  A small EICrecon plugin to "reconstruct" and
  *  cluster random hits generated in development
  *  stage 1.
+ *
+ *  This is the 2nd stage of development
+ *  towards an RCDAQ2JANA prototype.
  */
 /// ===========================================================================
 
@@ -60,15 +63,15 @@ extern "C" {
         {
           .capADC = 65536,  // 16 bit ADC
           .dyRangeADC = 1.0 * dd4hep::GeV,
-          .pedMeanADC = 300,
-          .pedSigmaADC = 2,  // not used; relying on energy cut
+          .pedMeanADC = 40,
+          .pedSigmaADC = 0,
           .resolutionTDC = 1 * dd4hep::picosecond,
-          .thresholdFactor = 0.0,  // not used; relying on flat ADC cut
-          .thresholdValue = 33,  // pedSigmaADC + thresholdValue = half-MIP (333 ADC)
+          .thresholdFactor = 0.0,
+          .thresholdValue = 0,
           .sampFrac = "0.033", // average, from sPHENIX simulations
           .readout = "HcalBarrelHits",
           .layerField = "",
-          .sectorField = "",
+          .sectorField = ""
         },
         app  // TODO remove me once fixed
       )
@@ -104,8 +107,8 @@ extern "C" {
           .readout = "HcalBarrelHits",
           .sectorDist = 5.0 * dd4hep::cm,
           .splitCluster = false,
-          .minClusterHitEdep = 5.0 * dd4hep::MeV,
-          .minClusterCenterEdep = 30.0 * dd4hep::MeV,
+          .minClusterHitEdep = 0.0 * dd4hep::MeV,
+          .minClusterCenterEdep = 0.0 * dd4hep::MeV,
           .transverseEnergyProfileMetric = "globalDistEtaPhi",
           .transverseEnergyProfileScale = 1.,
         },

@@ -31,6 +31,7 @@ collections = [
   "HcalBarrelRandomRawHits",
   "HcalBarrelRandomRecHits",
   "HcalBarrelRandomMergedHits",
+  "HcalBarrelRandomHitIslandProtoClusters",
   "HcalBarrelRandomHitClusters"
 ].compact.reject(&:empty?).join(',')
 
