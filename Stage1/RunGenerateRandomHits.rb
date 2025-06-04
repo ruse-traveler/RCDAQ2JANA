@@ -18,9 +18,7 @@ pars = OpenStruct.new
 pars.file     = "test_stage1_set.root"
 pars.collect  = "HcalBarrelRandomRawHits"
 pars.nframes  = 100
-pars.nhits    = 10
 pars.seed     = 0
-pars.mean     = 40
 pars.progress = true
 
 # now parse any provided command line options 
@@ -28,9 +26,7 @@ OptionParser.new do |opt|
   opt.on('-f FILE') { |val| pars.file     = val }
   opt.on('-c COLL') { |val| pars.collect  = val }
   opt.on('-r FRAM') { |val| pars.nframes  = val }
-  opt.on('-h HITS') { |val| pars.nhits    = val }
   opt.on('-s SEED') { |val| pars.seed     = val }
-  opt.on('-m MEAN') { |val| pars.mean     = val }
   opt.on('-p PROG') { |val| pars.progress = val } 
 end.parse!
 
@@ -41,9 +37,7 @@ bundle = <<STR
     .out_file    = "#{pars.file}",\
     .out_collect = "#{pars.collect}",\
     .nframes     = #{pars.nframes},\
-    .nhits       = #{pars.nhits},\
     .seed        = #{pars.seed},\
-    .mean        = #{pars.mean},\
     .progress    = #{pars.progress}\
   }
 STR

@@ -36,32 +36,49 @@
 
 
 // ============================================================================
-//! Struct to consolidate user options
+//! Parameters for stage 1 of development
 // ============================================================================
-struct Options {
-  std::string out_file;     //!< output file name
-  std::string out_collect;  //!< output collection (branch) name
-  uint64_t    nframes;      //!< number of frames to generate
-  uint32_t    nhits;        //!< number of hits per frame to generate
-  uint16_t    seed;         //!< seed mode (0 = fixed seed, 1 = date/time)
-  float       mean;         //!< mean hit "amplitude" in [ADC]
-  bool        progress;     //!< turn on/off frame loop progress
-} DefaultOptions = {
-  "test_stage1.root",
-  "HcalBarrelRandomRawHits",
-  100,
-  10,
-  0,
-  40.,
-  true
-};
+namespace Stage1 {
+
+  // ----------------------------------------------------------------------------
+  //! Struct to consolidate user options
+  // ----------------------------------------------------------------------------
+  struct Options {
+    std::string out_file;     //!< output file name
+    std::string out_collect;  //!< output collection (branch) name
+    uint64_t    nframes;      //!< number of frames to generate
+    uint16_t    seed;         //!< seed mode (0 = fixed seed, 1 = date/time)
+    bool        progress;     //!< turn on/off frame loop progress
+  } DefaultOptions = {
+    "test_stage1.root",
+    "HcalBarrelRandomRawHits",
+    100,
+    0,
+    true
+  };
+
+  // --------------------------------------------------------------------------
+  //! Struct to consolidate routine constants
+  // --------------------------------------------------------------------------
+  struct Constants {
+    uint32_t nhits;  //!< number of hits per frame to generate
+    float    mean;   //!< mean hit "amplitude" in [ADC]
+  } DefaultConsts = {
+    10,
+    40.
+  };
+
+}  // end Stage1 namespace
 
 
 
 // ============================================================================
-//! Macro to generate random raw calorimeter hits
+//! Macro to run stage 1: generate random raw calorimeter hits
 // ============================================================================
-void GenerateRandomHits(const Options& opt = DefaultOptions) {
+void GenerateRandomHits(
+  const Stage1::Options& opt = Stage1::DefaultOptions,
+  const Stage1::Constants& con = Stage1::DefaultConsts 
+) {
 
   // announce start
   std::cout << "\n Beginning stage 1 test: generating random raw hits..." << std::endl;
@@ -147,12 +164,12 @@ void GenerateRandomHits(const Options& opt = DefaultOptions) {
     auto hits  = std::make_unique<edm4hep::RawCalorimeterHitCollection>();
 
     // now generate nhits random hits per frame
-    for (std::size_t ihit = 0; ihit < opt.nhits; ++ihit) {
+    for (std::size_t ihit = 0; ihit < con.nhits; ++ihit) {
 
       // get random values
       int32_t  ieta = rando -> Uniform(0, 24);
       int32_t  iphi = rando -> Uniform(0, 320);
-      uint32_t amp  = rando -> Poisson(opt.mean);
+      uint32_t amp  = rando -> Poisson(con.mean);
 
       // encode hit position into a cell id
       int32_t cell = descriptor.encode(
