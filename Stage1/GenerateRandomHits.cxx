@@ -8,7 +8,7 @@
  *  them to an output.
  *
  *  This is the 1st stage of development towards
- *  a RCDAQ2JANA prototype.
+ *  an RCDAQ2JANA prototype.
  */
 /// ==========================================================================
 
@@ -16,6 +16,7 @@
 #define RCDAQ2JANA_GENERATERANDOMHITS_CXX
 
 // edm4hep types
+#include <edm4hep/EventHeaderCollection.h>
 #include <edm4hep/RawCalorimeterHitCollection.h>
 // podio libraries
 #include <podio/CollectionBase.h>
@@ -59,10 +60,12 @@ namespace Stage1 {
   //! Struct to consolidate routine constants
   // --------------------------------------------------------------------------
   struct Constants {
-    std::string out_collect;  //!< output collection (branch) name
+    std::string out_headers;  //!< output event header collection (branch) name
+    std::string out_hits;     //!< output raw hit collection (branch) name
     uint32_t    nhits;        //!< number of hits per frame to generate
     float       mean;         //!< mean hit "amplitude" in [ADC]
   } DefaultConsts = {
+    "EventHeader",
     "HcalBarrelRandomRawHits",
     10,
     40.
@@ -159,9 +162,16 @@ void GenerateRandomHits(
       }
     }
 
-    // create frame & hit collection
-    auto frame = podio::Frame();
-    auto hits  = std::make_unique<edm4hep::RawCalorimeterHitCollection>();
+    // create frame & collections
+    auto frame   = podio::Frame();
+    auto headers = std::make_unique<edm4hep::EventHeaderCollection>();
+    auto hits    = std::make_unique<edm4hep::RawCalorimeterHitCollection>();
+
+    // create header (ignore time stamp, run number is always 0)
+    auto header = headers -> create();
+    header.setEventNumber(iframe);
+    header.setRunNumber(0);
+    header.setWeight(1.0);
 
     // now generate nhits random hits per frame
     for (std::size_t ihit = 0; ihit < con.nhits; ++ihit) {
@@ -187,10 +197,11 @@ void GenerateRandomHits(
 
     }  // end hit loop
 
-    // place hits in frame and write out
+    // place header, hits in frame and write out
     //   - n.b. frame category is "events" for compatibility
     //     with EICrecon until we go to frames-in-events-out
-    frame.put(std::move(hits), con.out_collect);
+    frame.put(std::move(headers), con.out_headers);
+    frame.put(std::move(hits), con.out_hits);
     writer.writeFrame(frame, "events");
 
   }  // end frame loop
