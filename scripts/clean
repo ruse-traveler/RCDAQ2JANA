@@ -7,8 +7,8 @@
 # Short script to clean up your working area
 # =============================================================================
 
-rm -r calibrations
-rm -r fieldmaps
-rm -r gdml
+rm -r */calibrations
+rm -r */fieldmaps
+rm -r */gdml
 
 # end =========================================================================
