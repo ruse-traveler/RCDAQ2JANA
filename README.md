@@ -11,7 +11,6 @@ This demonstration is done with standalone cosmics data recorded by the sPHENIX 
 after it was constructed.
 
 ## Development Stages
----------------------
 
 Development will proceed in several stages, increasing the complexity at each step.
 

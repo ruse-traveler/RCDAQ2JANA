@@ -2,3 +2,6 @@
 *.pcm
 *.root
 *.so
+*/calibrations
+*/fieldmaps
+*/gdml
