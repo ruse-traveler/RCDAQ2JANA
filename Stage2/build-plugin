@@ -1,0 +1,14 @@
+#!/bin/bash
+# =============================================================================
+# @file   build-plugin
+# @author Derek Anderson
+# @date   06.04.2025
+# -----------------------------------------------------------------------------
+# A simple script to build the ProcessRandomHits
+# EICrecon plugin
+# =============================================================================
+
+cmake -S ProcessRandomHits -B ProcessRandomHits/build
+cmake --build ProcessRandomHits/build --target install -- -j8
+
+# end =========================================================================
