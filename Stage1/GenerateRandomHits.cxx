@@ -139,7 +139,7 @@ void GenerateRandomHits(
   try {
     descriptor = detector -> readout("HcalBarrelHits").idSpec();
   } catch (const std::runtime_error &err) {
-    std::cerr << "PANIC: readout class is not in output!\n" << std::endl;;
+    std::cerr << "PANIC: readout is not available!\n" << std::endl;;
     exit(-1);
   }
   std::cout << "    Initialized ID descriptor." << std::endl;
