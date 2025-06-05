@@ -1,0 +1,15 @@
+#!/bin/bash
+# =============================================================================
+# @file   get-rcdaq
+# @author Derek Anderson
+# @date   06.05.2025
+# -----------------------------------------------------------------------------
+# A simple script to grab the RCDAQ and
+# online-distribution (for pmonitor)
+# repos
+# =============================================================================
+
+git clone https://github.com/mpurschke/rcdaq.git
+git clone https://github.com/sPHENIX-Collaboration/online_distribution.git
+
+# end =========================================================================
