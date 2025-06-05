@@ -1,0 +1,23 @@
+#!/bin/bash
+# =============================================================================
+# @file   build-rcdaq
+# @author Derek Anderson
+# @date   06.05.2025
+# -----------------------------------------------------------------------------
+# A simple script to build RCDAQ and
+# the online-distribution libraries
+# ============================================================================
+
+# set your installation path
+onlmain=~/install
+if [ ! -z "$1" ] ; then
+  onlmain=$1
+fi
+export ONLINE_MAIN="$onlmain"
+
+# now make build directories
+#  - n.b. we will only need pmontior
+mkdir -p build/rcdaq
+mkdir -p build/online_distribution/pmonitor
+
+# end =========================================================================
