@@ -1,6 +1,6 @@
-#!/usr/bin/env ruby
+#!/bin/bash
 # =============================================================================
-# @file   TestRCDAQCompilation.rb
+# @file   TestRCDAQCompilation.sh
 # @author Derek Anderson
 # @date   06.05.2025
 # -----------------------------------------------------------------------------
@@ -12,11 +12,11 @@
 # of an RCDAQ2JANA prototype.
 # =============================================================================
 
-system(". ./unzip-input")
-system(". ./get-rcdaq")
-system(". ./switch-to-epic-branch")
-system(". ./apply-patches")
-system(". ./build-rcdaq")
-system(". ./set-environment")
+. ./unzip-input
+. ./get-rcdaq
+. ./switch-to-epic-branch
+. ./apply-patches
+. ./build-rcdaq
+. ./set-environment
 
 # end =========================================================================
