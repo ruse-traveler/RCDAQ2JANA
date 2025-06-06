@@ -1,0 +1,17 @@
+#!/bin/bash
+# =============================================================================
+# @file   apply-patches
+# @author Derek Anderson
+# @date   06.05.2025
+# -----------------------------------------------------------------------------
+# A simple script to apply some patches 
+# to the rcdaq and online-distribution
+# repos until things are fixed upstream
+# =============================================================================
+
+cp patches/rcdaq/Makefile.am rcdaq/
+cp patches/eventlibraries/configure.ac online_distribution/eventlibraries/
+cp patches/eventlibraries/Makefile.am online_distribution/eventlibraries/
+cp patches/pmonitor/Makefile.am online_distribution/pmonitor/
+
+# end =========================================================================

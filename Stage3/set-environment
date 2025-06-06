@@ -1,0 +1,22 @@
+#!/bin/bash
+# =============================================================================
+# @file   set-environment
+# @author Derek Anderson
+# @date   06.05.2025
+# -----------------------------------------------------------------------------
+# A simple script to set various environment
+# variables & aliases after compiling RCDAQ
+# =============================================================================
+
+# 1st add installation directory to paths
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ONLINE_MAIN/lib
+export PATH=$PATH:$ONLINE_MAIN:$ONLINE_MAIN/bin
+export ROOT_INCLUDE_PATH=$ROOT_INCLUDE_PATH:$ONLINE_MAIN/include:$ONLINE_MAIN/include/Event:$ONLINE_MAIN/include/pmonitor
+
+# alias rcdaq commands for brevity
+source $ONLINE_MAIN/bin/aliases.sh
+
+# now test...
+dlist ../input/cosmics_s2-00000073-0000.evt
+
+# end =========================================================================

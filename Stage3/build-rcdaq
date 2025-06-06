@@ -8,16 +8,39 @@
 # the online-distribution libraries
 # ============================================================================
 
+# grab current directory
+cwg=$PWD
+
 # set your installation path
-onlmain=~/install
+ONLINE_MAIN=~/install
 if [ ! -z "$1" ] ; then
-  onlmain=$1
+  ONLINE_MAIN=$1
 fi
-export ONLINE_MAIN="$onlmain"
+
+# set "sphenix" include path
+#  - FIXME these will need to get changed upstream sometime soon
+export OPT_SPHENIX="$C_INCLUDE_PATH"
 
 # now make build directories
-#  - n.b. we will only need pmontior
 mkdir -p build/rcdaq
-mkdir -p build/online_distribution/pmonitor
+mkdir -p build/online_distribution/{eventlibraries,pmonitor}
+
+# build rcdaq
+cd build/rcdaq
+../../rcdaq/autogen.sh --prefix=$ONLINE_MAIN
+make install
+cd $cwg
+
+# build event libraries
+cd build/online_distribution/eventlibraries
+../../../online_distribution/eventlibraries/autogen.sh --prefix=$ONLINE_MAIN
+make install
+cd $cwg
+
+# build pmonitor
+cd build/online_distribution/pmonitor
+../../../online_distribution/pmonitor/autogen.sh --prefix=$ONLINE_MAIN
+make install
+cd $cwg
 
 # end =========================================================================

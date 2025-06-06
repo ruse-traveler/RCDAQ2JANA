@@ -16,6 +16,6 @@ Development will proceed in several stages, increasing the complexity at each st
 
 1. :white_check_mark: Confirm we can generate random hits and save them to an output tree,
 2. :white_check_mark: Confirm that we can process the saved random hits in EICrecon,
-3. Confirm that we can run pmonitor in the EIC environment,
+3. :white_check_mark: Confirm that we can run pmonitor in the EIC environment,
 4. Confirm that we can create hits from pmonitor output and save them to an output tree,
 5. Confirm that we can process the saved pmonitor hits in EICrecon.
