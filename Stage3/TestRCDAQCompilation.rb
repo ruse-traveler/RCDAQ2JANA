@@ -12,9 +12,10 @@
 # of an RCDAQ2JANA prototype.
 # =============================================================================
 
-system("./get-rcdaq")
-system("./switch-to-epic-branch")
-system("./apply-patches")
+system(". ./unzip-input")
+system(". ./get-rcdaq")
+system(". ./switch-to-epic-branch")
+system(". ./apply-patches")
 system(". ./build-rcdaq")
 system(". ./set-environment")
 
