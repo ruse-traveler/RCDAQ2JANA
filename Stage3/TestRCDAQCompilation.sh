@@ -12,11 +12,17 @@
 # of an RCDAQ2JANA prototype.
 # =============================================================================
 
+# set your installation path
+ONLINE_MAIN=~/install
+if [ ! -z "$1" ] ; then
+  ONLINE_MAIN=$1
+fi
+
 . ./unzip-input
 . ./get-rcdaq
 . ./switch-to-epic-branch
 . ./apply-patches
-. ./build-rcdaq
+. ./build-rcdaq $ONLINE_MAIN
 . ./set-environment
 
 # end =========================================================================
