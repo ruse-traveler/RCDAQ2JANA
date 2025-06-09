@@ -9,9 +9,9 @@
 # repos until things are fixed upstream
 # =============================================================================
 
-cp patches/rcdaq/Makefile.am rcdaq/
-cp patches/eventlibraries/configure.ac online_distribution/eventlibraries/
-cp patches/eventlibraries/Makefile.am online_distribution/eventlibraries/
-cp patches/pmonitor/Makefile.am online_distribution/pmonitor/
+cp -v patches/rcdaq/Makefile.am rcdaq/
+cp -v patches/eventlibraries/configure.ac online_distribution/eventlibraries/
+cp -v patches/eventlibraries/Makefile.am online_distribution/eventlibraries/
+cp -v patches/pmonitor/Makefile.am online_distribution/pmonitor/
 
 # end =========================================================================

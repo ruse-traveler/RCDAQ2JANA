@@ -8,7 +8,7 @@
 # online-distribution repos
 # =============================================================================
 
-rm -rf rcdaq
-rm -rf online_distribution
+rm -rfv rcdaq
+rm -rfv online_distribution
 
 # end =========================================================================
