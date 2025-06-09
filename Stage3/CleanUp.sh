@@ -8,6 +8,7 @@
 # =============================================================================
 
 ./remove-input
+./remove-rcdaq
 ./wipe-build
 ./wipe-installation
 
